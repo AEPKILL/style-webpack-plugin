@@ -61,8 +61,3 @@ new StylePlugin('./src/styles/index.scss', {
 ## Reference
 
 base on [sass-webpack-plugin](https://github.com/jalkoby/sass-webpack-plugin)
-
-> different with `sass-webpack-plugin`: 
->
-> `sass-webpack-plugin` only compile your scss/sass files once on your first build , `style-webpack-plugin` will watch your scss/sass files change and continuous compile.
-
