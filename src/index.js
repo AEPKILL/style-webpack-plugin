@@ -20,6 +20,7 @@ class StylePlugin {
       return true;
     }
     
+
     for (const dep of dependencies) {
       const time = timestamps[dep];
       if (!time && time > this.lastStart) {
