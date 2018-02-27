@@ -10,28 +10,20 @@ class StylePlugin {
   constructor(files, mode, config) {
     this.files = processFiles(files);
     this.options = processConfig(mode, config);
-
+    this.lastStart = 0;
     this.dependMap = {};
-
-    // file timestamps
-    // I was tried use `compilation.fileTimestamps`, but it's not work
-    this.fileTimestamps = {};
   }
 
-  ifNeedRebuild(file) {
-    const dependencies = this.dependMap[file];
-
-    // first build
-    if (!dependencies) {
+  ifNeedRebuild(file, timestamps) {
+    if (!this.lastStart) {
       return true;
     }
 
-    // check all dependencies
+    const dependencies = this.dependMap[file];
+
     for (const dep of dependencies) {
-      const timestamps = fs.statSync(dep).mtimeMs;
-      const preTimestamps = this.fileTimestamps[dep];
-      if (timestamps !== preTimestamps) {
-        this.fileTimestamps[dep] = timestamps;
+      const time = timestamps[dep];
+      if (!time && time > this.lastStart) {
         return true;
       }
     }
@@ -41,6 +33,7 @@ class StylePlugin {
 
   processFile(file, outFile, compilation) {
     const processor = new Processor(file, outFile, this.options);
+    this.lastStart = +new Date();
     return processor
       .process()
       .then(([stats, asset, sourceMaps]) => {
@@ -49,12 +42,6 @@ class StylePlugin {
           .map(file => path.normalize(file));
 
         compilation.assets[outFile] = asset;
-
-        if (!this.dependMap[file]) {
-          for (const dep of includedFiles) {
-            this.fileTimestamps[dep] = fs.statSync(dep).mtimeMs;
-          }
-        }
 
         this.dependMap[file] = includedFiles;
 
@@ -72,7 +59,7 @@ class StylePlugin {
       const processQueue = [];
 
       for (const file of Object.keys(this.files)) {
-        if (this.ifNeedRebuild(file)) {
+        if (this.ifNeedRebuild(file, compilation.fileTimestamps)) {
           processQueue.push(
             this.processFile(file, this.files[file], compilation)
           );
