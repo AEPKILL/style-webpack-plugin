@@ -1,0 +1,68 @@
+{
+  "name": "style-webpack-plugin",
+  "version": "1.0.0",
+  "description": "Get your stylesheets together",
+  "main": "index.js",
+  "module": "index.es.js",
+  "jsnext:main": "index.es.js",
+  "typings": "index.d.ts",
+  "scripts": {
+    "build": "node scripts/build.js",
+    "lint": "eslint src test",
+    "demo": "npm run build && webpack-dev-server --config ./demo/webpack.config.js",
+    "test": "npm run lint && mocha --compilers js:babel-register",
+    "preversion": "npm test",
+    "version": "npm run build",
+    "postversion": "git push && git push --tags && npm publish ./dist"
+  },
+  "author": "Sergey Pchelintsev & AEPKILL",
+  "keywords": [
+    "sass",
+    "webpack",
+    "plugin"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AepKill/scss-webpack-plugin"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-register": "^6.26.0",
+    "chai": "^3.5.0",
+    "del": "^2.2.2",
+    "eslint": "^3.17.1",
+    "eslint-plugin-mocha": "^4.9.0",
+    "html-webpack-plugin": "^2.30.1",
+    "html-webpack-template": "^5.6.0",
+    "memory-fs": "^0.4.1",
+    "mocha": "^3.2.0",
+    "rollup": "^0.50.0",
+    "rollup-plugin-babel": "^3.0.2",
+    "sierra-library": "^2.0.0",
+    "webpack": ">=2.0 <4.0.0",
+    "webpack-dev-server": "^2.9.3"
+  },
+  "dependencies": {
+    "autoprefixer": ">= 7.0",
+    "lodash": ">= 4.0.0",
+    "node-sass": ">= 3.0",
+    "postcss": ">= 6.0"
+  },
+  "peerDependencies": {
+    "webpack": ">= 2.2.0"
+  },
+  "babel": {
+    "presets": [
+      [
+        "env",
+        {
+          "targets": {
+            "node": "4.3"
+          }
+        }
+      ]
+    ]
+  }
+}
