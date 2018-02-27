@@ -14,12 +14,12 @@ class StylePlugin {
   }
 
   ifNeedRebuild(file, timestamps) {
-    if (!this.lastStart) {
+    const dependencies = this.dependMap[file];
+    
+    if (!dependencies) {
       return true;
     }
-
-    const dependencies = this.dependMap[file];
-
+    
     for (const dep of dependencies) {
       const time = timestamps[dep];
       if (!time && time > this.lastStart) {
